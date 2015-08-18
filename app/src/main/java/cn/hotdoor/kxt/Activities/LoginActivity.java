@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 XGPushManager.registerPush(context,phoneNumber, new XGIOperateCallback() {
                     @Override
                     public void onSuccess(Object data, int flag) {
-                        Toast.makeText(context,"注册成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"成功", Toast.LENGTH_SHORT).show();
                         //  progressButton.setProgress(100);
 
                         SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
