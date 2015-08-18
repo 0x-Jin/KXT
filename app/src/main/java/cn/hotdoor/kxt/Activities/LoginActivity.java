@@ -1,5 +1,6 @@
-package cn.hotdoor.kxt;
+package cn.hotdoor.kxt.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.dd.CircularProgressButton;
+
+import cn.hotdoor.kxt.R;
 
 public class LoginActivity extends AppCompatActivity {
     private CircularProgressButton getcodeBtn,loginBtn;
@@ -31,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loginBtn.setProgress(50);
-
+                startActivity(new Intent(LoginActivity.this,MessageActivity.class));
             }
         });
     }

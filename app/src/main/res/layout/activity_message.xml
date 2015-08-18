@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    tools:context="cn.hotdoor.kxt.Activities.MessageActivity">
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/message_pfl_pullltorefresh"
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        cube_ptr:ptr_resistance="1.7"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_duration_to_close="300"
+        cube_ptr:ptr_duration_to_close_header="700"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false">
+        <it.gmariotti.cardslib.library.view.CardListView
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/message_cardlv_message"
+            />
+    </in.srain.cube.views.ptr.PtrFrameLayout>
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/message_fab_funbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_refresh_white_48dp"
+        fab:fab_colorNormal="#34B9E4"
+        fab:fab_colorPressed="@color/accent_pressed"
+        fab:fab_colorRipple="@color/ripple" />
+</RelativeLayout>
