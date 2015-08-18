@@ -35,62 +35,6 @@ public class LoginActivity extends AppCompatActivity {
         context = getApplicationContext();
         isPermit();
         init();
-        getcodeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (getcodeBtn.getProgress() == 0) {
-                    getcodeBtn.setProgress(50);
-                } else if (getcodeBtn.getProgress() == 100) {
-                    getcodeBtn.setProgress(0);
-                } else {
-                    getcodeBtn.setProgress(100);
-                }
-            }
-
-        });
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginBtn.setProgress(50);
-                String phoneNumber =phoneEt.getText().toString();
-                XGPushManager.registerPush(context,phoneNumber, new XGIOperateCallback() {
-                    @Override
-                    public void onSuccess(Object data, int flag) {
-                        Toast.makeText(context,"成功", Toast.LENGTH_SHORT).show();
-                        //  progressButton.setProgress(100);
-
-                        SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
-                        //String user = pre.getString("number", "");
-                        SharedPreferences.Editor edit = pre.edit();
-                        edit.putString("fg","1");
-                        edit.commit();
-
-                        // edit.putString("cookie", l.getCookie());
-
-                        try {
-                            Thread.sleep(700);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        startActivity(new Intent(LoginActivity.this,MessageActivity.class));
-                        finish();
-                    }
-
-                    @Override
-                    public void onFail(Object data, int errCode, String msg) {
-                        loginBtn.setProgress(-1);
-                        loginBtn.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                loginBtn.setProgress(0);
-                            }
-                        },2000);
-                    }
-                });
-
-            }
-        });
 
     }
 
@@ -118,7 +62,42 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loginBtn.setProgress(50);
-                startActivity(new Intent(LoginActivity.this,MessageActivity.class));
+                String phoneNumber = phoneEt.getText().toString();
+                XGPushManager.registerPush(context, phoneNumber, new XGIOperateCallback() {
+                    @Override
+                    public void onSuccess(Object data, int flag) {
+                        Toast.makeText(context, "成功", Toast.LENGTH_SHORT).show();
+                        //  progressButton.setProgress(100);
+
+                        SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
+                        //String user = pre.getString("number", "");
+                        SharedPreferences.Editor edit = pre.edit();
+                        edit.putString("fg", "1");
+                        edit.commit();
+
+                        // edit.putString("cookie", l.getCookie());
+
+                        try {
+                            Thread.sleep(700);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        startActivity(new Intent(LoginActivity.this, MessageActivity.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(Object data, int errCode, String msg) {
+                        loginBtn.setProgress(-1);
+                        loginBtn.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                loginBtn.setProgress(0);
+                            }
+                        }, 2000);
+                    }
+                });
 
             }
         });
@@ -129,9 +108,15 @@ public class LoginActivity extends AppCompatActivity {
         getcodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity();
-                getcodeBtn.setProgress(50);
+                if (getcodeBtn.getProgress() == 0) {
+                    getcodeBtn.setProgress(50);
+                } else if (getcodeBtn.getProgress() == 100) {
+                    getcodeBtn.setProgress(0);
+                } else {
+                    getcodeBtn.setProgress(100);
+                }
             }
+
         });
     }
 

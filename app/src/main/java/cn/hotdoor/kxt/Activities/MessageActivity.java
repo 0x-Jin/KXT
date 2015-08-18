@@ -65,6 +65,12 @@ public class MessageActivity extends AppCompatActivity{
 
     private void fabMethod() {
         funFab= (FloatingActionButton) findViewById(R.id.message_fab_funbutton);
+        funFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshPtr.autoRefresh();
+            }
+        });
         funFab.attachToListView(messageCardLv, new ScrollDirectionListener() {
             @Override
             public void onScrollDown() {
