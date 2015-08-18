@@ -11,4 +11,5 @@
     <string name="loginfail">登录失败</string>
     <string name="loginsuccess">登陆成功</string>
     <string name="sent">已发送</string>
+    <string name="title_activity_message">MessageActivity</string>
 </resources>

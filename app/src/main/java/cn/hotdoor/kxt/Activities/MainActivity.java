@@ -1,4 +1,12 @@
-package cn.hotdoor.kxt;
+/*
+ * Copyright (c) 2015. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
+package cn.hotdoor.kxt.Activities;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +16,8 @@ import android.view.MenuItem;
 
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
+
+import cn.hotdoor.kxt.R;
 
 
 public class MainActivity extends AppCompatActivity {
