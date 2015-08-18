@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtnMethod();
 
     }
-
+//haha
     private void loginBtnMethod() {
         loginBtn.setIndeterminateProgressMode(true);
         loginBtn.setOnClickListener(new View.OnClickListener() {

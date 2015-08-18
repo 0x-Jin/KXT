@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         XGPushManager.registerPush(context);
     }
+    //zhuxi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
