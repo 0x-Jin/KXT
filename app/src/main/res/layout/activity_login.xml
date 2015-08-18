@@ -40,7 +40,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_phone_android_green_200_36dp"
+            android:background="@drawable/ic_phone_android_green_500_36dp"
             />
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_lock_outline_orange_200_36dp"
+            android:background="@drawable/ic_lock_outline_orange_400_36dp"
             />
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="wrap_content"
