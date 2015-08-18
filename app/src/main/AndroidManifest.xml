@@ -105,6 +105,9 @@
             android:name=".Activities.MessageActivity"
             android:label="@string/title_activity_message" >
         </activity>
+        <activity
+            android:name=".Activities.InfoActivity"
+            android:label="@string/title_activity_info"></activity>
     </application>
 
 </manifest>

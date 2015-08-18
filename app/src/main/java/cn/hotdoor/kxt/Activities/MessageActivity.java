@@ -105,7 +105,7 @@ public class MessageActivity extends AppCompatActivity{
         settingIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(CardActivity.this,InfoActivity.class));
+                startActivity(new Intent(MessageActivity.this, InfoActivity.class));
             }
         });
     }
