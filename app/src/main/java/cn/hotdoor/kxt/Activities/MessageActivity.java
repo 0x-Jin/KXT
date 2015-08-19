@@ -139,6 +139,7 @@ public class MessageActivity extends AppCompatActivity {
                 cards.add(makecard(data.get(i).getDate(),
                         data.get(i).getPhone(), data.get(i).getMessage(),
                         data.get(i).getIcon()));
+                //
             }
         } return cards;
     }
