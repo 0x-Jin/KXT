@@ -25,7 +25,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_keyboard_arrow_left_light_blue_a100_36dp"
+            android:background="@drawable/ic_keyboard_arrow_left_purple_800_36dp"
             android:id="@+id/info_iv_return"
             android:layout_centerVertical="true" />
 
@@ -52,7 +52,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_account_circle_orange_200_36dp"
+            android:background="@drawable/ic_account_circle_light_green_600_36dp"
             android:id="@+id/info_iv_account"
             android:layout_centerVertical="true" />
 
@@ -89,7 +89,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_info_outline_pink_200_36dp"
+            android:background="@drawable/ic_info_outline_pink_300_36dp"
             android:id="@+id/info_iv_info"
             android:layout_centerVertical="true" />
 

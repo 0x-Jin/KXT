@@ -12,16 +12,25 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ScrollDirectionListener;
 
-import java.util.ArrayList;
+import net.tsz.afinal.FinalDb;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.hotdoor.kxt.Beans.MessageItemBean;
 import cn.hotdoor.kxt.Beans.MyCard;
+import cn.hotdoor.kxt.Data.Filemake;
+import cn.hotdoor.kxt.Data.GlobleData;
 import cn.hotdoor.kxt.R;
+import cn.hotdoor.kxt.Utils.DialogUtils;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
@@ -31,39 +40,56 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
 import it.gmariotti.cardslib.library.view.CardListView;
 
-
-public class MessageActivity extends AppCompatActivity{
+public class MessageActivity extends AppCompatActivity {
     private PtrFrameLayout refreshPtr;
     private StoreHouseHeader header;
     private ImageView settingIv;
     private CardListView messageCardLv;
     FloatingActionButton funFab;
+    private long exitTime = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        GlobleData.db = FinalDb.creat(getApplicationContext());
+        GlobleData.mess=this;
+        initPic();
         initHeader();//初始化header
         initRefreshPtr();
-        CardArrayAdapter cardArrayAdapter=new CardArrayAdapter(MessageActivity.this,initCards());
-        messageCardLv= (CardListView) findViewById(R.id.message_cardlv_message);
 
-        View head=getLayoutInflater().inflate(R.layout.header_main,messageCardLv,false);
+        messageCardLv = (CardListView) findViewById(R.id.message_cardlv_message);
+        View head = getLayoutInflater().inflate(R.layout.header_main, messageCardLv, false);
         messageCardLv.addHeaderView(head);
-
-        settingIv= (ImageView) head.findViewById(R.id.header_iv_setting);
+        settingIv = (ImageView) head.findViewById(R.id.header_iv_setting);
         settingIvMethod();
-
-        if (messageCardLv!=null){
-            messageCardLv.setAdapter(cardArrayAdapter);
-        }
+        loadMessage();
         fabMethod();
-
 
 
     }
 
+    private void loadMessage() {
+        CardArrayAdapter cardArrayAdapter = new CardArrayAdapter(MessageActivity.this, initCards());
+
+        if (messageCardLv != null) {
+            messageCardLv.setAdapter(cardArrayAdapter);
+        }
+    }
+
+    private void initPic() {
+        Filemake f = new Filemake(0);
+        try {
+            f.makeDir(getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void fabMethod() {
+
         funFab= (FloatingActionButton) findViewById(R.id.message_fab_funbutton);
         funFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,10 +97,11 @@ public class MessageActivity extends AppCompatActivity{
                 refreshPtr.autoRefresh();
             }
         });
+
         funFab.attachToListView(messageCardLv, new ScrollDirectionListener() {
             @Override
             public void onScrollDown() {
-                if (messageCardLv.getFirstVisiblePosition()<1){
+                if (messageCardLv.getFirstVisiblePosition() < 1) {
                     funFab.setImageResource(R.drawable.ic_refresh_white_48dp);
                     funFab.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -82,13 +109,12 @@ public class MessageActivity extends AppCompatActivity{
                             refreshPtr.autoRefresh();
                         }
                     });
-                }
-                else {
+                } else {
                     funFab.setImageResource(R.drawable.ic_keyboard_arrow_up_white_48dp);
                     funFab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            messageCardLv.smoothScrollToPositionFromTop(0,0,300);
+                            messageCardLv.smoothScrollToPositionFromTop(0, 0, 300);
                         }
                     });
                 }
@@ -106,25 +132,31 @@ public class MessageActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MessageActivity.this, InfoActivity.class));
+
             }
         });
     }
 
     private ArrayList<Card> initCards() {
-        ArrayList<Card> cards=new ArrayList<>();
+        ArrayList<Card> cards = new ArrayList<>();
         //card test
-        for (int i=0;i<1000;i++)
-        {
-            int[] ic={R.drawable.i1,R.drawable.i2,R.drawable.i3,R.drawable.i4,R.drawable.i5,R.drawable.i6};
-            cards.add(makecard("2015年8月" + i + "日",
-                    "1372625" + i,"This is a message you see for test hahahaha\n(╯‵□′)╯︵┻━┻  \n（╯－＿－）╯╧╧\n" + i,ic[i*10%6]));
+        List<MessageItemBean> data = new ArrayList<>();
+        //data.addAll(GlobleData.db.findAll(MessageItemBean.class));
+        data.addAll(GlobleData.db.findAll(MessageItemBean.class));
+        data.get(0).getMessage();
+        if (data.size() > 0) {
+            for (int i = (data.size() - 1); i > -1; i--) {
+                cards.add(makecard(data.get(i).getDate(),
+                        data.get(i).getPhone(), data.get(i).getMessage(),
+                        data.get(i).getIcon()));
+            }
         }
-        //test
         return cards;
-
     }
 
-    private Card makecard(String Date, String Phone, String Message, int Icon) {
+
+
+    private Card makecard(String Date, String Phone, String Message, String Icon) {
         MyCard newCard=new MyCard(MessageActivity.this,R.layout.message_item);
         newCard.setDate(Date);
         newCard.setPhone(Phone);
@@ -162,6 +194,21 @@ public class MessageActivity extends AppCompatActivity{
                 }
             },1800);
         }
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                DialogUtils.showToast(this, "再按一次退出程序");
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

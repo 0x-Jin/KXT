@@ -1,6 +1,7 @@
 package cn.hotdoor.kxt.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.dd.CircularProgressButton;
 
+import cn.hotdoor.kxt.Data.GlobleData;
 import cn.hotdoor.kxt.R;
 import me.drakeet.materialdialog.MaterialDialog;
 
@@ -62,8 +64,16 @@ public class InfoActivity extends AppCompatActivity {
         logoutDialog = new MaterialDialog(this).setTitle("确认退出？").setPositiveButton("注销", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InfoActivity.this.finish();
+
+                SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
+                SharedPreferences.Editor edit = pre.edit();
+                edit.putString("fg", "0");
+                edit.commit();
+
                 startActivity(new Intent(InfoActivity.this, LoginActivity.class));
+                InfoActivity.this.finish();
+                GlobleData.mess.finish();
+
             }
         }).setNegativeButton("取消", new View.OnClickListener() {
             @Override

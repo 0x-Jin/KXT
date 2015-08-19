@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private CircularProgressButton getcodeBtn,loginBtn;
     private EditText phoneEt,passEt;
     Context context;
+    private long exitTime = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (getcodeBtn.getProgress() == 0) {
                     getcodeBtn.setProgress(50);
+
                 } else if (getcodeBtn.getProgress() == 100) {
                     getcodeBtn.setProgress(0);
                 } else {
@@ -146,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            long exitTime=0;
+
             if ((System.currentTimeMillis() - exitTime) > 2000) {
                 DialogUtils.showToast(this, "再按一次退出程序");
                 exitTime = System.currentTimeMillis();
