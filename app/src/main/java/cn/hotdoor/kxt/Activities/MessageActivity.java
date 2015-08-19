@@ -62,10 +62,7 @@ public class MessageActivity extends AppCompatActivity {
         messageCardLv.addHeaderView(head);
         settingIv = (ImageView) head.findViewById(R.id.header_iv_setting);
         settingIvMethod();
-
         loadMessage();
-
-
         fabMethod();
 
 
@@ -132,15 +129,17 @@ public class MessageActivity extends AppCompatActivity {
         ArrayList<Card> cards = new ArrayList<>();
         //card test
         List<MessageItemBean> data = new ArrayList<>();
+        //data.addAll(GlobleData.db.findAll(MessageItemBean.class));
         data.addAll(GlobleData.db.findAll(MessageItemBean.class));
-
+        data.get(0).getMessage();
         if (data.size() > 0) {
             for (int i = (data.size() - 1); i > -1; i--) {
                 cards.add(makecard(data.get(i).getDate(),
                         data.get(i).getPhone(), data.get(i).getMessage(),
                         data.get(i).getIcon()));
             }
-        } return cards;
+        }
+        return cards;
     }
 
 

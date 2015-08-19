@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loginBtn.setProgress(50);
                 String phoneNumber =phoneEt.getText().toString();
+
                 XGPushManager.registerPush(context,phoneNumber, new XGIOperateCallback() {
                     @Override
                     public void onSuccess(Object data, int flag) {

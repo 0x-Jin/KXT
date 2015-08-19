@@ -111,10 +111,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".Activities.MessageActivity"
             android:label="@string/title_activity_message" >
+          
         </activity>
     </application>
 
