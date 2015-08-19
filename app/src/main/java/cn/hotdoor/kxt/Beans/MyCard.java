@@ -1,10 +1,14 @@
 package cn.hotdoor.kxt.Beans;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import cn.hotdoor.kxt.Data.GlobleData;
 import cn.hotdoor.kxt.R;
 
 import it.gmariotti.cardslib.library.internal.Card;
@@ -14,7 +18,7 @@ import it.gmariotti.cardslib.library.internal.Card;
  */
 public class MyCard extends Card {
         public String Date,Message,Phone;
-        public int Icon;
+        public String Icon;
 
     public MyCard(Context context) {
         super(context);
@@ -48,13 +52,15 @@ public class MyCard extends Card {
         Phone = phone;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return Icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         Icon = icon;
     }
+
+
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
@@ -62,7 +68,10 @@ public class MyCard extends Card {
         TextView messageTV= (TextView) parent.findViewById(R.id.message_tv_content);
         TextView phoneTV= (TextView) parent.findViewById(R.id.message_tv_phone);
         TextView dateTV= (TextView) parent.findViewById(R.id.message_tv_date);
-        iconIV.setImageResource(getIcon());
+       // iconIV.setImageResource(getIcon());
+        Bitmap bmp = BitmapFactory.decodeFile(GlobleData.FilepathMusic + "man_1.png");
+        // imageview.setImageBitmap(bmp);
+        iconIV.setImageBitmap(bmp);
         messageTV.setText(getMessage());
         phoneTV.setText(getPhone());
         dateTV.setText(getDate());
