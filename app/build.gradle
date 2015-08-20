@@ -35,4 +35,6 @@ dependencies {
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile files('libs/afinal0.0.2.jar')
+    compile files('libs/volley.jar')
+
 }
