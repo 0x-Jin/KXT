@@ -3,6 +3,9 @@ package cn.hotdoor.kxt.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,27 +16,45 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.dd.CircularProgressButton;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
+import com.wrapp.floatlabelededittext.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 import java.sql.Time;
+import java.util.HashMap;
+import java.util.Map;
 
+import cn.hotdoor.kxt.Data.GlobleData;
 import cn.hotdoor.kxt.R;
+import cn.hotdoor.kxt.Utils.ConnectUtils;
 import cn.hotdoor.kxt.Utils.DialogUtils;
+import cn.hotdoor.kxt.Utils.NormalPostRequest;
 
 public class LoginActivity extends AppCompatActivity {
-    private CircularProgressButton getcodeBtn,loginBtn;
+    public CircularProgressButton getcodeBtn,loginBtn;
     private EditText phoneEt,passEt;
-    Context context;
+    //Context context;
     private long exitTime = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         XGPushConfig.enableDebug(this, true);
-        context = getApplicationContext();
+        GlobleData.context = getApplicationContext();
         isPermit();
         init();
 
@@ -64,10 +85,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loginBtn.setProgress(50);
                 String phoneNumber = phoneEt.getText().toString();
-                XGPushManager.registerPush(context, phoneNumber, new XGIOperateCallback() {
+                XGPushManager.registerPush(GlobleData.context, phoneNumber, new XGIOperateCallback() {
                     @Override
                     public void onSuccess(Object data, int flag) {
-                        Toast.makeText(context, "成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GlobleData.context, "成功", Toast.LENGTH_SHORT).show();
                         //  progressButton.setProgress(100);
 
                         SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
@@ -105,18 +126,75 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getcodeBtnMethod() {
+      //  Handler handler = new HandlerExtension(LoginActivity.this);
+      //  Message m  = handler.obtainMessage();
+        WeakReference<LoginActivity> mActivity;
+        mActivity = new WeakReference<LoginActivity>(LoginActivity.this);
+        LoginActivity theActivity = mActivity.get();
+        final String xgtoken =(XGPushConfig.getToken(theActivity));
+        //Toast.makeText(GlobleData.context,xgtoken, Toast.LENGTH_SHORT).show();
         getcodeBtn.setIndeterminateProgressMode(true);
         getcodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (getcodeBtn.getProgress() == 0) {
-                    getcodeBtn.setProgress(50);
+
+                    try {
+                        getcodeBtn.setProgress(50);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    String mobile=phoneEt.getText().toString();
+                    Map<String,String> map = new HashMap<String,String>();
+                    map.put("mobile",mobile);
+                    map.put("xgtoken",xgtoken);
+                    getCode(map);
+
+                    getcodeBtn.setProgress(100);
 
                 } else if (getcodeBtn.getProgress() == 100) {
                     getcodeBtn.setProgress(0);
                 } else {
                     getcodeBtn.setProgress(100);
                 }
+            }
+
+
+
+            private void getCode(Map<String, String> map) {
+
+
+
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                Request<JSONObject> request = new NormalPostRequest(GlobleData.captchaUrl, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //Log.d(TAG, "response -> " + response.toString());
+                        //Toast.makeText(GlobleData.context,response.toString(), Toast.LENGTH_LONG).show();
+
+                        try {
+                            String  result = response.getString("errcode");
+                            Toast.makeText(GlobleData.context,result, Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                       // Log.e(TAG, error.getMessage(), error);
+                        Toast.makeText(GlobleData.context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, map);
+                requestQueue.add(request);
+                requestQueue.start();
+
+
+
+
             }
 
         });
@@ -160,4 +238,86 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
+}
+/*private static class HandlerExtension extends Handler {
+    WeakReference<LoginActivity> mActivity;
+
+    HandlerExtension(LoginActivity activity) {
+        mActivity = new WeakReference<LoginActivity>(activity);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        super.handleMessage(msg);
+        LoginActivity theActivity = mActivity.get();
+        if (theActivity == null) {
+            theActivity = new LoginActivity();
+        }
+        if (msg != null) {
+            //Log.w(Constants.LogTag, msg.obj.toString());
+            //TextView textView = (TextView) theActivity
+               //     .findViewById(R.id.deviceToken);
+            String s =(XGPushConfig.getToken(theActivity));
+        }
+        // XGPushManager.registerCustomNotification(theActivity,
+        // "BACKSTREET", "BOYS", System.currentTimeMillis() + 5000, 0);
+    }
+}*/
+
+
+class Captcha extends AsyncTask<Map<String,String>, Integer, String> {
+
+    @Override
+    protected void onPreExecute() {
+        // TODO Auto-generated method stub
+
+        super.onPreExecute();
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        // TODO Auto-generated method stub
+        super.onProgressUpdate(values);
+    }
+
+    @Override
+    protected String doInBackground(Map<String, String>...map) {
+        // TODO Auto-generated method stub
+        final String[] s = new String[1];
+
+        RequestQueue requestQueue = Volley.newRequestQueue(GlobleData.context);
+        //Map<String, String> map = new HashMap<String, String>();
+        JSONObject jsonObject = new JSONObject(map[0]);
+        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest
+                (Request.Method.POST,GlobleData.captchaUrl,
+                jsonObject,
+                        new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("TAG", "response -> " + response.toString());
+                         s[0] =response.toString();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+            }
+        });
+
+        requestQueue.add(jsonRequest);
+
+        return s[0];
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        // TODO Auto-generated method stub
+
+        super.onPostExecute(result);
+    }
+
+
 }

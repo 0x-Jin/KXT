@@ -115,7 +115,8 @@
         </activity>
         <activity
             android:name=".Activities.MessageActivity"
-            android:label="@string/title_activity_message" >
+            android:label="@string/title_activity_message"
+            android:launchMode="singleTask">
           
         </activity>
         <activity
