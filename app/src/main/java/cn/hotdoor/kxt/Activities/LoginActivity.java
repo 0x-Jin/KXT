@@ -28,6 +28,9 @@ import com.dd.CircularProgressButton;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
+import com.tuenti.smsradar.Sms;
+import com.tuenti.smsradar.SmsListener;
+import com.tuenti.smsradar.SmsRadar;
 import com.wrapp.floatlabelededittext.Utils;
 
 import org.json.JSONException;
@@ -67,6 +70,26 @@ public class LoginActivity extends AppCompatActivity {
         passEt = (EditText)findViewById(R.id.login_et_code);
         getcodeBtnMethod();
         loginBtnMethod();
+        smsRadarMethod();
+    }
+
+    private void smsRadarMethod() {
+        SmsRadar.initializeSmsRadarService(LoginActivity.this, new SmsListener() {
+            @Override
+            public void onSmsSent(Sms sms) {
+
+            }
+
+            @Override
+            public void onSmsReceived(Sms sms) {
+                String message=sms.getMsg();
+                String code=message.substring(13,17);
+                Log.i("code", code);
+                passEt.setText(code);
+
+
+            }
+        });
     }
 
     private void isPermit() {
@@ -141,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     try {
                         getcodeBtn.setProgress(50);
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
