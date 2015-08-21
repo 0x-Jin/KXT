@@ -28,6 +28,9 @@ import com.dd.CircularProgressButton;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
+import com.tuenti.smsradar.Sms;
+import com.tuenti.smsradar.SmsListener;
+import com.tuenti.smsradar.SmsRadar;
 import com.wrapp.floatlabelededittext.Utils;
 
 import org.json.JSONException;
@@ -57,7 +60,34 @@ public class LoginActivity extends AppCompatActivity {
         GlobleData.context = getApplicationContext();
         isPermit();
         init();
+        smsRadarMethod();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        SmsRadar.stopSmsRadarService(this);
+        super.onDestroy();
+
+    }
+
+    private void smsRadarMethod() {
+        SmsRadar.initializeSmsRadarService(LoginActivity.this, new SmsListener() {
+            @Override
+            public void onSmsSent(Sms sms) {
+
+            }
+
+            @Override
+            public void onSmsReceived(Sms sms) {
+                String message = sms.getMsg();
+                if (message.contains("维信互动") && message.contains("验证码")) {
+                    String code = message.substring(13, 17);
+                    Log.i("code", code);
+                    passEt.setText(code);
+                }
+            }
+        });
     }
 
     private void init() {
@@ -148,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
                             switch (result){
                             case "0":loginSeccess();
                                 case "4045":loginFail();
-                                    default:Toast.makeText(GlobleData.context,"default", Toast.LENGTH_LONG).show();;
+                                    default:Toast.makeText(GlobleData.context,"default", Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
