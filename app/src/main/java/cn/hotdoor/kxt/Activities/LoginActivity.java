@@ -85,7 +85,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loginBtn.setProgress(50);
                 String phoneNumber = phoneEt.getText().toString();
-                XGPushManager.registerPush(GlobleData.context, phoneNumber, new XGIOperateCallback() {
+                String passNumber = passEt.getText().toString();
+                Map<String,String> map = new HashMap<String,String>();
+                map.put("mobile",phoneNumber);
+                map.put("code",passNumber);
+                loginMethod(map);
+
+
+
+
+                /*XGPushManager.registerPush(LoginActivity.this, phoneNumber, new XGIOperateCallback() {
                     @Override
                     public void onSuccess(Object data, int flag) {
                         Toast.makeText(GlobleData.context, "成功", Toast.LENGTH_SHORT).show();
@@ -119,11 +128,82 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }, 2000);
                     }
-                });
+                });*/
+
 
             }
+
+            private void loginMethod(Map<String, String> map) {
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                Request<JSONObject> request = new NormalPostRequest(GlobleData.loginUrl, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //Log.d(TAG, "response -> " + response.toString());
+                       // Toast.makeText(GlobleData.context,response.toString(), Toast.LENGTH_LONG).show();
+
+                        try {
+                            GlobleData.token = response.getString("token");
+                            String  result = response.getString("errcode");
+                            Toast.makeText(GlobleData.context,result, Toast.LENGTH_LONG).show();
+                            switch (result){
+                            case "0":loginSeccess();
+                                case "4045":loginFail();
+                                    default:Toast.makeText(GlobleData.context,"default", Toast.LENGTH_LONG).show();;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Log.e(TAG, error.getMessage(), error);
+                        Toast.makeText(GlobleData.context, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }, map);
+                requestQueue.add(request);
+                requestQueue.start();
+
+            }
+
+            private void loginSeccess() {
+                SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
+                //String user = pre.getString("number", "");
+                SharedPreferences.Editor edit = pre.edit();
+                edit.putString("fg", "1");
+                edit.commit();
+
+                // edit.putString("cookie", l.getCookie());
+
+                try {
+                    Thread.sleep(700);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                startActivity(new Intent(LoginActivity.this, MessageActivity.class));
+                finish();
+            }
+
+
+
         });
     }
+
+    private void loginFail() {
+        loginBtn.setProgress(-1);
+        loginBtn.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loginBtn.setProgress(0);
+            }
+        }, 2000);
+        Toast.makeText(GlobleData.context,"验证码或密码错误",Toast.LENGTH_SHORT).show();
+    }
+
+
+
 
     private void getcodeBtnMethod() {
       //  Handler handler = new HandlerExtension(LoginActivity.this);
@@ -139,12 +219,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (getcodeBtn.getProgress() == 0) {
 
-                    try {
+
                         getcodeBtn.setProgress(50);
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
 
                     String mobile=phoneEt.getText().toString();
                     Map<String,String> map = new HashMap<String,String>();
@@ -152,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
                     map.put("xgtoken",xgtoken);
                     getCode(map);
 
-                    getcodeBtn.setProgress(100);
+
 
                 } else if (getcodeBtn.getProgress() == 100) {
                     getcodeBtn.setProgress(0);

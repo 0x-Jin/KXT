@@ -15,8 +15,8 @@ public class GlobleData {
     public static String FilepathMusic = "mnt/sdcard/KXT_Pic/";
     public static MessageActivity mess;
     public static Context context;
-    String baseUrl="";
-    String loginUrl="";
+    public static String loginUrl="http://192.168.10.129/api/client/mode/login";
+    public static String token;
     public static String captchaUrl="http://192.168.10.129/api/client/mode/getcode";
-
+                 
 }

@@ -72,7 +72,7 @@ public class InfoActivity extends AppCompatActivity {
 
                 startActivity(new Intent(InfoActivity.this, LoginActivity.class));
                 InfoActivity.this.finish();
-                GlobleData.mess.finish();
+               // GlobleData.mess.finish();
 
             }
         }).setNegativeButton("取消", new View.OnClickListener() {
