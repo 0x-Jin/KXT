@@ -45,8 +45,7 @@
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
+            android:layout_weight="1">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +54,7 @@
                 android:background="@null"
                 android:id="@+id/login_et_phone"
                 android:singleLine="true"
-
+                android:inputType="phone"
                 />
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         <com.dd.CircularProgressButton

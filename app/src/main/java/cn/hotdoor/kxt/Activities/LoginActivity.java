@@ -121,6 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                         edit.putString("fg", "1");
                         edit.commit();
 
+
                         // edit.putString("cookie", l.getCookie());
 
                         try {
