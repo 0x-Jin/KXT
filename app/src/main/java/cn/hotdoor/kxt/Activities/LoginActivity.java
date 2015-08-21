@@ -83,11 +83,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSmsReceived(Sms sms) {
                 String message=sms.getMsg();
-                String code=message.substring(13,17);
-                Log.i("code", code);
-                passEt.setText(code);
-
-
+                if (message.contains("维信互动")&&message.contains("验证码"))
+                {
+                    String code=message.substring(13,17);
+                    Log.i("code", code);
+                    passEt.setText(code);
+                }
             }
         });
     }
@@ -95,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
     private void isPermit() {
         SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
         if(pre.getString("fg", "").equals("1")){
-            startActivity(new Intent(LoginActivity.this,MessageActivity.class));
+//            startActivity(new Intent(LoginActivity.this,MessageActivity.class));
             finish();
         }
     }
