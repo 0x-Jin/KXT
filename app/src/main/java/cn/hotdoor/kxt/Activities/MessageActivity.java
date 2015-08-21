@@ -143,7 +143,7 @@ public class MessageActivity extends AppCompatActivity {
         List<MessageItemBean> data = new ArrayList<>();
         //data.addAll(GlobleData.db.findAll(MessageItemBean.class));
         data.addAll(GlobleData.db.findAll(MessageItemBean.class));
-        data.get(0).getMessage();
+        
         if (data.size() > 0) {
             for (int i = (data.size() - 1); i > -1; i--) {
                 cards.add(makecard(data.get(i).getDate(),
