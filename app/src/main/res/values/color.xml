@@ -6,4 +6,16 @@
     <color name="ripple">#F06292</color>
     <color name="accent">#E91E63</color>
     <color name="accent_pressed">#C2185B</color>
+    <color name="fab_sheet_color">#ffffff</color>
+    <color name="fab_color">#34B9E4</color>
+    <color name="myblue">#34B9E4</color>
+    <color name="card_topcolored_subtitle_textcolor">#FFFFFF</color>
+    <color name="card_topcolored_title_textcolor">#80FFFFFF</color>
+
+    <color name="random_card_color_red">#F44336</color>
+    <color name="random_card_color_blue">#2196F3</color>
+    <color name="random_card_color_purple">#9C27B0</color>
+    <color name="random_card_color_green">#4CAF50</color>
+    <color name="random_card_color_orange">#FF5722</color>
+
 </resources>

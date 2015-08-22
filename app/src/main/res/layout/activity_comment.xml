@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    tools:context="cn.hotdoor.kxt.Activities.CommentActivity">
+
+    <include
+        layout="@layout/head_comment"
+        android:id="@+id/comment_include_head" />
+
+    <it.gmariotti.cardslib.library.view.CardListView
+        android:id="@+id/comment_clv_comment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/comment_include_head" />
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/comment_fab_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_create_white_36dp"
+        fab:fab_colorNormal="#34B9E4"
+        fab:fab_colorPressed="@color/accent_pressed"
+        fab:fab_colorRipple="@color/ripple" />
+
+</RelativeLayout>
