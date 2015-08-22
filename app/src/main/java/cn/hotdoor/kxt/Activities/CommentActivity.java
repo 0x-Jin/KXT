@@ -14,6 +14,7 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Random;
 
+import cn.hotdoor.kxt.Beans.MyCommentCard;
 import cn.hotdoor.kxt.R;
 import it.gmariotti.cardslib.library.cards.topcolored.TopColoredCard;
 import it.gmariotti.cardslib.library.internal.Card;
@@ -41,8 +42,7 @@ public class CommentActivity extends AppCompatActivity {
         initMaterialDialog();
         commentFabMethod();
     }
-
-    private void initMaterialDialog() {
+    private void  initMaterialDialog() {
         commentV = View.inflate(this, R.layout.comment_material_dialog, null);
         commentEt = (EditText) commentV.findViewById(R.id.et_comment);
         commentEt.setFocusable(true);
@@ -63,7 +63,6 @@ public class CommentActivity extends AppCompatActivity {
             }
         });
     }
-
     private void addCommentCard(String commentString) {
         if (commentString.length() > 0) {
             initCommentCards(commentString);
@@ -72,7 +71,6 @@ public class CommentActivity extends AppCompatActivity {
         } else
             Toast.makeText(CommentActivity.this, "请输入反馈", Toast.LENGTH_SHORT).show();
     }
-
     private void initCommentCards(String Content) {
         Time time = new Time();
         time.setToNow();
@@ -84,13 +82,14 @@ public class CommentActivity extends AppCompatActivity {
         String currentTime = year + "年" + month + "月" + date + "日" + hour + "时" + minute + "分";
         int RandomColors[] = {R.color.random_card_color_blue, R.color.random_card_color_green, R.color.random_card_color_orange, R.color.random_card_color_purple, R.color.random_card_color_red};
         Random random = new Random();
-        TopColoredCard card = TopColoredCard.with(CommentActivity.this).setColorResId(RandomColors[random.nextInt(5)]).setTitleOverColor(currentTime).setSubTitleOverColor(Content).build();
-        card.setId(ID++ + "");
-        card.setSwipeable(true);
+//        TopColoredCard card = TopColoredCard.with(CommentActivity.this).setColorResId(RandomColors[random.nextInt(5)]).setTitleOverColor(currentTime).setSubTitleOverColor(Content).build();
+        MyCommentCard card=new MyCommentCard(this,R.layout.card_comment);
+        card.setTimeString(currentTime);
+        card.setCommentString(Content);
         card.setOnLongClickListener(new Card.OnLongCardClickListener() {
             @Override
             public boolean onLongClick(final Card card, View view) {
-                confirmMd = new MaterialDialog(CommentActivity.this).setTitle("确认删除此条反馈？").setPositiveButton("删除", new View.OnClickListener() {
+                confirmMd = new MaterialDialog(CommentActivity.this).setTitle("删除反馈？").setMessage("确认删除此条反馈？").setPositiveButton("删除", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         comments.remove(card);
@@ -100,7 +99,6 @@ public class CommentActivity extends AppCompatActivity {
                 }).setNegativeButton("取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        card.onUndoSwipeListCard();
                         confirmMd.dismiss();
                     }
                 });
