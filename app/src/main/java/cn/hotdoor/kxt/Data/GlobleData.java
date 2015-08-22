@@ -12,11 +12,14 @@ import cn.hotdoor.kxt.Activities.MessageActivity;
  */
 public class GlobleData {
     public static FinalDb db;
-    public static String FilepathMusic = "mnt/sdcard/KXT_Pic/";
+    public static String FilepathMusic = "mnt/sdcard/KXT_Icon/";
     public static MessageActivity mess;
     public static Context context;
     public static String loginUrl="http://192.168.10.129/api/client/mode/login";
-    public static String token;
-    public static String captchaUrl="http://192.168.10.129/api/client/mode/getcode";
+    public static String token="";
+    public static String mobile="";
+
+    public static String captchaUrl = "http://192.168.10.129/api/client/mode/getcode";
+    public static String getMessage = "http://192.168.10.129/api/client/mode/lists";
                  
 }

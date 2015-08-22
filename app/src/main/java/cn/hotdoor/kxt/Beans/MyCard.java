@@ -64,12 +64,14 @@ public class MyCard extends Card {
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
+
         ImageView iconIV= (ImageView) parent.findViewById(R.id.message_iv_icon);
         TextView messageTV= (TextView) parent.findViewById(R.id.message_tv_content);
         TextView phoneTV= (TextView) parent.findViewById(R.id.message_tv_phone);
         TextView dateTV= (TextView) parent.findViewById(R.id.message_tv_date);
        // iconIV.setImageResource(getIcon());
-        Bitmap bmp = BitmapFactory.decodeFile(GlobleData.FilepathMusic + "man_1.png");
+
+        Bitmap bmp = BitmapFactory.decodeFile(GlobleData.FilepathMusic +getIcon());
         // imageview.setImageBitmap(bmp);
         iconIV.setImageBitmap(bmp);
         messageTV.setText(getMessage());

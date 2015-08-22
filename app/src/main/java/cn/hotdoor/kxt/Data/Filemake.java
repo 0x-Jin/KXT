@@ -22,12 +22,12 @@ public class Filemake {
     int flag = 0;
 
     private String FilepathMusic = GlobleData.FilepathMusic;//记得mnt private String FilepathLRC="mnt/sdcard/LCLrc/"; int flag; 
-    File pic1 = new File(FilepathMusic + "man_1.png");
-    File pic2 = new File(FilepathMusic + "man_2.png");
-    File pic3 = new File(FilepathMusic + "man_3.png");
-    File pic4 = new File(FilepathMusic + "man_4.png");
-    File pic5 = new File(FilepathMusic + "man_5.png");
-    File pic6 = new File(FilepathMusic + "man_6.png");
+    File pic1 = new File(FilepathMusic + "1");
+    File pic2 = new File(FilepathMusic + "2");
+    File pic3 = new File(FilepathMusic + "3");
+    File pic4 = new File(FilepathMusic + "4");
+    File pic5 = new File(FilepathMusic + "5");
+    File pic6 = new File(FilepathMusic + "6");
 
 
     public Filemake(int flag) {//flag就是主activity传入的misfirst值 
