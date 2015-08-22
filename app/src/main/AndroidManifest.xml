@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- smsreader 读取短信所需权限↓ -->
-    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <!-- 【可选】 信鸽SDK所需权限 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -58,7 +58,6 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".Receveiver.MessageReceiver" >
             <intent-filter>
 
@@ -68,7 +67,6 @@
                 <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
             </intent-filter>
         </receiver>
-
 
         <!-- 【必须】 (2.30及以上版新增)展示通知的activity -->
         <!-- 【注意】 如果被打开的activity是启动模式为SingleTop，SingleTask或SingleInstance，请根据通知的异常自查列表第8点处理 -->
@@ -115,21 +113,23 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".Activities.MessageActivity"
-            android:label="@string/title_activity_message"
-           >
+            android:label="@string/title_activity_message">
         </activity>
         <activity
             android:name=".Activities.InfoActivity"
-            android:label="@string/title_activity_info"></activity>
+            android:label="@string/title_activity_info" />
         <!-- smsreader 读取短信所需服务↓ -->
         <service
             android:name="com.tuenti.smsradar.SmsRadarService"
             android:exported="false"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
+
+        <activity
+            android:name=".Activities.CommentActivity"
+            android:label="@string/title_activity_comment"></activity>
     </application>
 
 </manifest>
