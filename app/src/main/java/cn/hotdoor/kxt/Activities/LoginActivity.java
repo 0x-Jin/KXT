@@ -93,6 +93,14 @@ public class LoginActivity extends AppCompatActivity {
     private void init() {
         getcodeBtn = (CircularProgressButton) findViewById(R.id.login_btn_getcode);
         loginBtn = (CircularProgressButton) findViewById(R.id.login_btn_login);
+        loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(LoginActivity.this, MessageActivity.class));
+                finish();
+                return false;
+            }
+        });
         phoneEt = (EditText)findViewById(R.id.login_et_phone);
         passEt = (EditText)findViewById(R.id.login_et_code);
         getcodeBtnMethod();
@@ -116,6 +124,8 @@ public class LoginActivity extends AppCompatActivity {
                 loginBtn.setProgress(50);
                 String phoneNumber = phoneEt.getText().toString();
                 String passNumber = passEt.getText().toString();
+                GlobleData.mobile=phoneNumber;
+
                 Map<String,String> map = new HashMap<String,String>();
                 map.put("mobile",phoneNumber);
                 map.put("code",passNumber);
@@ -164,6 +174,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             private void loginMethod(Map<String, String> map) {
+
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 Request<JSONObject> request = new NormalPostRequest(GlobleData.loginUrl, new Response.Listener<JSONObject>() {
                     @Override
@@ -173,12 +184,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         try {
                             GlobleData.token = response.getString("token");
+
                             String  result = response.getString("errcode");
                             Toast.makeText(GlobleData.context,result, Toast.LENGTH_LONG).show();
                             switch (result){
-                            case "0":loginSeccess();
-                                case "4045":loginFail();
-                                    default:Toast.makeText(GlobleData.context,"default", Toast.LENGTH_LONG).show();
+                            case "0":loginSeccess();break;
+                                case "4045":loginFail();break;
+                                default:Toast.makeText(GlobleData.context,"default", Toast.LENGTH_LONG).show();break;
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -202,6 +214,13 @@ public class LoginActivity extends AppCompatActivity {
                 //String user = pre.getString("number", "");
                 SharedPreferences.Editor edit = pre.edit();
                 edit.putString("fg", "1");
+                edit.commit();
+
+                SharedPreferences account = getSharedPreferences("account", MODE_APPEND);
+                //String user = pre.getString("number", "");
+                edit = account.edit();
+                edit.putString("mobile",GlobleData.mobile);
+                edit.putString("token",GlobleData.token);
                 edit.commit();
 
                 // edit.putString("cookie", l.getCookie());
@@ -250,10 +269,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (getcodeBtn.getProgress() == 0) {
 
 
-                        getcodeBtn.setProgress(50);
+                    getcodeBtn.setProgress(50);
 
 
                     String mobile=phoneEt.getText().toString();
+
                     Map<String,String> map = new HashMap<String,String>();
                     map.put("mobile",mobile);
                     map.put("xgtoken",xgtoken);
@@ -374,57 +394,8 @@ public class LoginActivity extends AppCompatActivity {
 }*/
 
 
-class Captcha extends AsyncTask<Map<String,String>, Integer, String> {
-
-    @Override
-    protected void onPreExecute() {
-        // TODO Auto-generated method stub
-
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        // TODO Auto-generated method stub
-        super.onProgressUpdate(values);
-    }
-
-    @Override
-    protected String doInBackground(Map<String, String>...map) {
-        // TODO Auto-generated method stub
-        final String[] s = new String[1];
-
-        RequestQueue requestQueue = Volley.newRequestQueue(GlobleData.context);
-        //Map<String, String> map = new HashMap<String, String>();
-        JSONObject jsonObject = new JSONObject(map[0]);
-        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest
-                (Request.Method.POST,GlobleData.captchaUrl,
-                jsonObject,
-                        new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("TAG", "response -> " + response.toString());
-                         s[0] =response.toString();
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-            }
-        });
-
-        requestQueue.add(jsonRequest);
-
-        return s[0];
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        // TODO Auto-generated method stub
-
-        super.onPostExecute(result);
-    }
 
 
-}
+
+
+
