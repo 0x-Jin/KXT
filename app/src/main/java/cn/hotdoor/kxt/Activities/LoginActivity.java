@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     public CircularProgressButton getcodeBtn,loginBtn;
     private EditText phoneEt,passEt;
     private MyTimeCount timeCount;
+    private CountDownTimer timeoutCount;
     //Context context;
     private long exitTime = 0;
     @Override
@@ -66,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                startActivity(new Intent(LoginActivity.this,MessageActivity.class));
+                startActivity(new Intent(LoginActivity.this, MessageActivity.class));
                 return true;
             }
         });
@@ -138,7 +139,17 @@ public class LoginActivity extends AppCompatActivity {
                 Map<String,String> map = new HashMap<String,String>();
                 map.put("mobile",phoneNumber);
                 map.put("code",passNumber);
+                if (phoneEt.getText().length() <= 0 || passEt.getText().length() <= 0) {
+                    loginBtn.setProgress(-1);
+                    loginBtn.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loginBtn.setProgress(0);
+                        }
+                    }, 1800);
+                } else {
                 loginMethod(map);
+                }
 
 
 
@@ -228,20 +239,22 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences account = getSharedPreferences("account", MODE_APPEND);
                 //String user = pre.getString("number", "");
                 edit = account.edit();
-                edit.putString("mobile",GlobleData.mobile);
-                edit.putString("token",GlobleData.token);
+                edit.putString("mobile", GlobleData.mobile);
+                edit.putString("token", GlobleData.token);
                 edit.commit();
 
                 // edit.putString("cookie", l.getCookie());
+                loginBtn.setProgress(100);
+                loginBtn.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(LoginActivity.this, MessageActivity.class));
+                        finish();
+                    }
+                }, 2000);
 
-                try {
-                    Thread.sleep(700);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
 
-                startActivity(new Intent(LoginActivity.this, MessageActivity.class));
-                finish();
+
             }
 
 
@@ -271,7 +284,8 @@ public class LoginActivity extends AppCompatActivity {
         LoginActivity theActivity = mActivity.get();
         final String xgtoken =(XGPushConfig.getToken(theActivity));
 
-        timeCount=new MyTimeCount(5000,1000);
+        timeCount = new MyTimeCount(120000, 1000);
+
 
         //Toast.makeText(GlobleData.context,xgtoken, Toast.LENGTH_SHORT).show();
         getcodeBtn.setIndeterminateProgressMode(true);
@@ -285,17 +299,6 @@ public class LoginActivity extends AppCompatActivity {
                 if(getcodeBtn.getProgress()==0){
                     getCode(map);
                     getcodeBtn.setProgress(50);
-
-//                    getcodeBtn.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            getcodeBtn.setProgress(100);
-//                            timeCount.start();
-//                        }
-//                    },1800);
-
-                    Toast.makeText(LoginActivity.this, "验证码已发送", Toast.LENGTH_SHORT).show();
-
 
                 }
 
@@ -317,14 +320,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
             private void getCode(Map<String, String> map) {
+
+                timeoutCount = new MyTimeCount(10000, 1000);
+
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 Request<JSONObject> request = new NormalPostRequest(GlobleData.captchaUrl, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         //Log.d(TAG, "response -> " + response.toString());
                         //Toast.makeText(GlobleData.context,response.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "验证码已发送", Toast.LENGTH_SHORT).show();
                         try {
-                            String  result = response.getString("errcode");
+                            final String result = response.getString("errcode");
                             Toast.makeText(GlobleData.context,result, Toast.LENGTH_LONG).show();
                             switch (result){
                                 case "0":getcodeBtn.setProgress(100);timeCount.start();break;
@@ -343,15 +350,15 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                        // Log.e(TAG, error.getMessage(), error);
-                        Toast.makeText(GlobleData.context, error.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(GlobleData.context, error.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(GlobleData.context,"连接超时，请稍后重试", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "连接超时，请稍后重试", Toast.LENGTH_SHORT).show();
+                        getcodeBtn.setProgress(0);
                     }
+
                 }, map);
                 requestQueue.add(request);
                 requestQueue.start();
-
-
-
-
             }
 
         });
