@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +50,6 @@ import cn.hotdoor.kxt.Utils.NormalPostRequest;
 public class LoginActivity extends AppCompatActivity {
     public CircularProgressButton getcodeBtn,loginBtn;
     private EditText phoneEt,passEt;
-    private MyTimeCount timeCount;
     //Context context;
     private long exitTime = 0;
     @Override
@@ -62,22 +60,17 @@ public class LoginActivity extends AppCompatActivity {
         GlobleData.context = getApplicationContext();
         isPermit();
         init();
-        smsRadarMethod();
-        loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                startActivity(new Intent(LoginActivity.this,MessageActivity.class));
-                return true;
-            }
-        });
 
     }
 
-    @Override
-    protected void onDestroy() {
-        SmsRadar.stopSmsRadarService(this);
-        super.onDestroy();
-
+    private void init() {
+        getcodeBtn = (CircularProgressButton) findViewById(R.id.login_btn_getcode);
+        loginBtn = (CircularProgressButton) findViewById(R.id.login_btn_login);
+        phoneEt = (EditText)findViewById(R.id.login_et_phone);
+        passEt = (EditText)findViewById(R.id.login_et_code);
+        getcodeBtnMethod();
+        loginBtnMethod();
+        smsRadarMethod();
     }
 
     private void smsRadarMethod() {
@@ -89,9 +82,10 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onSmsReceived(Sms sms) {
-                String message = sms.getMsg();
-                if (message.contains("维信互动") && message.contains("验证码")) {
-                    String code = message.substring(13, 17);
+                String message=sms.getMsg();
+                if (message.contains("维信互动")&&message.contains("验证码"))
+                {
+                    String code=message.substring(13,17);
                     Log.i("code", code);
                     passEt.setText(code);
                 }
@@ -99,27 +93,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void init() {
-        getcodeBtn = (CircularProgressButton) findViewById(R.id.login_btn_getcode);
-        loginBtn = (CircularProgressButton) findViewById(R.id.login_btn_login);
-        loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                startActivity(new Intent(LoginActivity.this, MessageActivity.class));
-                finish();
-                return false;
-            }
-        });
-        phoneEt = (EditText)findViewById(R.id.login_et_phone);
-        passEt = (EditText)findViewById(R.id.login_et_code);
-        getcodeBtnMethod();
-        loginBtnMethod();
-    }
-
     private void isPermit() {
         SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
         if(pre.getString("fg", "").equals("1")){
-            startActivity(new Intent(LoginActivity.this,MessageActivity.class));
+//            startActivity(new Intent(LoginActivity.this,MessageActivity.class));
             finish();
         }
     }
@@ -132,18 +109,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 loginBtn.setProgress(50);
                 String phoneNumber = phoneEt.getText().toString();
-                String passNumber = passEt.getText().toString();
-                GlobleData.mobile=phoneNumber;
-
-                Map<String,String> map = new HashMap<String,String>();
-                map.put("mobile",phoneNumber);
-                map.put("code",passNumber);
-                loginMethod(map);
-
-
-
-
-                /*XGPushManager.registerPush(LoginActivity.this, phoneNumber, new XGIOperateCallback() {
+                XGPushManager.registerPush(GlobleData.context, phoneNumber, new XGIOperateCallback() {
                     @Override
                     public void onSuccess(Object data, int flag) {
                         Toast.makeText(GlobleData.context, "成功", Toast.LENGTH_SHORT).show();
@@ -154,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                         SharedPreferences.Editor edit = pre.edit();
                         edit.putString("fg", "1");
                         edit.commit();
+
 
                         // edit.putString("cookie", l.getCookie());
 
@@ -177,91 +144,11 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }, 2000);
                     }
-                });*/
-
-
-            }
-
-            private void loginMethod(Map<String, String> map) {
-
-                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                Request<JSONObject> request = new NormalPostRequest(GlobleData.loginUrl, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        //Log.d(TAG, "response -> " + response.toString());
-                       // Toast.makeText(GlobleData.context,response.toString(), Toast.LENGTH_LONG).show();
-
-                        try {
-                            GlobleData.token = response.getString("token");
-
-                            String  result = response.getString("errcode");
-                            Toast.makeText(GlobleData.context,result, Toast.LENGTH_LONG).show();
-                            switch (result){
-                            case "0":loginSeccess();break;
-                                case "4045":loginFail();break;
-                                default:Toast.makeText(GlobleData.context,"default", Toast.LENGTH_LONG).show();break;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Log.e(TAG, error.getMessage(), error);
-                        Toast.makeText(GlobleData.context, error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }, map);
-                requestQueue.add(request);
-                requestQueue.start();
+                });
 
             }
-
-            private void loginSeccess() {
-                SharedPreferences pre = getSharedPreferences("login", MODE_APPEND);
-                //String user = pre.getString("number", "");
-                SharedPreferences.Editor edit = pre.edit();
-                edit.putString("fg", "1");
-                edit.commit();
-
-                SharedPreferences account = getSharedPreferences("account", MODE_APPEND);
-                //String user = pre.getString("number", "");
-                edit = account.edit();
-                edit.putString("mobile",GlobleData.mobile);
-                edit.putString("token",GlobleData.token);
-                edit.commit();
-
-                // edit.putString("cookie", l.getCookie());
-
-                try {
-                    Thread.sleep(700);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                startActivity(new Intent(LoginActivity.this, MessageActivity.class));
-                finish();
-            }
-
-
-
         });
     }
-
-    private void loginFail() {
-        loginBtn.setProgress(-1);
-        loginBtn.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loginBtn.setProgress(0);
-            }
-        }, 2000);
-        Toast.makeText(GlobleData.context,"验证码或密码错误",Toast.LENGTH_SHORT).show();
-    }
-
-
-
 
     private void getcodeBtnMethod() {
       //  Handler handler = new HandlerExtension(LoginActivity.this);
@@ -270,74 +157,55 @@ public class LoginActivity extends AppCompatActivity {
         mActivity = new WeakReference<LoginActivity>(LoginActivity.this);
         LoginActivity theActivity = mActivity.get();
         final String xgtoken =(XGPushConfig.getToken(theActivity));
-
-        timeCount=new MyTimeCount(5000,1000);
-
         //Toast.makeText(GlobleData.context,xgtoken, Toast.LENGTH_SHORT).show();
         getcodeBtn.setIndeterminateProgressMode(true);
         getcodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mobile=phoneEt.getText().toString();
+                if (getcodeBtn.getProgress() == 0) {
+
+                    try {
+                        getcodeBtn.setProgress(50);
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    String mobile=phoneEt.getText().toString();
                     Map<String,String> map = new HashMap<String,String>();
                     map.put("mobile",mobile);
-                map.put("xgtoken",xgtoken);
-                if(getcodeBtn.getProgress()==0){
+                    map.put("xgtoken",xgtoken);
                     getCode(map);
-                    getcodeBtn.setProgress(50);
 
-//                    getcodeBtn.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            getcodeBtn.setProgress(100);
-//                            timeCount.start();
-//                        }
-//                    },1800);
+                    getcodeBtn.setProgress(100);
 
-                    Toast.makeText(LoginActivity.this, "验证码已发送", Toast.LENGTH_SHORT).show();
-
-
+                } else if (getcodeBtn.getProgress() == 100) {
+                    getcodeBtn.setProgress(0);
+                } else {
+                    getcodeBtn.setProgress(100);
                 }
-
-
-//                if (getcodeBtn.getProgress() == 0) {
-//                    getcodeBtn.setProgress(50);
-//                    String mobile=phoneEt.getText().toString();
-//                    Map<String,String> map = new HashMap<String,String>();
-//                    map.put("mobile",mobile);
-//                    map.put("xgtoken",xgtoken);
-//                    getCode(map);
-//                } else if (getcodeBtn.getProgress() == 100) {
-//                    getcodeBtn.setProgress(0);
-//                } else {
-//                    getcodeBtn.setProgress(100);
-//                }
             }
 
 
 
             private void getCode(Map<String, String> map) {
+
+
+
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
                 Request<JSONObject> request = new NormalPostRequest(GlobleData.captchaUrl, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         //Log.d(TAG, "response -> " + response.toString());
                         //Toast.makeText(GlobleData.context,response.toString(), Toast.LENGTH_LONG).show();
+
                         try {
                             String  result = response.getString("errcode");
                             Toast.makeText(GlobleData.context,result, Toast.LENGTH_LONG).show();
-                            switch (result){
-                                case "0":getcodeBtn.setProgress(100);timeCount.start();break;
-                                case "4045":getcodeBtn.setProgress(-1);getcodeBtn.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getcodeBtn.setProgress(0);
-                                    }
-                                },1800);break;
-                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -395,35 +263,86 @@ public class LoginActivity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-    class MyTimeCount extends CountDownTimer{
-        /**
-         * @param millisInFuture    The number of millis in the future from the call
-         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
-         *                          is called.
-         * @param countDownInterval The interval along the way to receive
-         *                          {@link #onTick(long)} callbacks.
-         */
-        public MyTimeCount(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
 
-        @Override
-        public void onTick(long millisUntilFinished) {
-            getcodeBtn.setClickable(false);
-            getcodeBtn.setText(millisUntilFinished / 1000 + "秒");
-        }
 
-        @Override
-        public void onFinish() {
-            getcodeBtn.setProgress(0);
-            getcodeBtn.setClickable(true);
-        }
-    }
 }
+/*private static class HandlerExtension extends Handler {
+    WeakReference<LoginActivity> mActivity;
+
+    HandlerExtension(LoginActivity activity) {
+        mActivity = new WeakReference<LoginActivity>(activity);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        super.handleMessage(msg);
+        LoginActivity theActivity = mActivity.get();
+        if (theActivity == null) {
+            theActivity = new LoginActivity();
+        }
+        if (msg != null) {
+            //Log.w(Constants.LogTag, msg.obj.toString());
+            //TextView textView = (TextView) theActivity
+               //     .findViewById(R.id.deviceToken);
+            String s =(XGPushConfig.getToken(theActivity));
+        }
+        // XGPushManager.registerCustomNotification(theActivity,
+        // "BACKSTREET", "BOYS", System.currentTimeMillis() + 5000, 0);
+    }
+}*/
 
 
+class Captcha extends AsyncTask<Map<String,String>, Integer, String> {
+
+    @Override
+    protected void onPreExecute() {
+        // TODO Auto-generated method stub
+
+        super.onPreExecute();
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        // TODO Auto-generated method stub
+        super.onProgressUpdate(values);
+    }
+
+    @Override
+    protected String doInBackground(Map<String, String>...map) {
+        // TODO Auto-generated method stub
+        final String[] s = new String[1];
+
+        RequestQueue requestQueue = Volley.newRequestQueue(GlobleData.context);
+        //Map<String, String> map = new HashMap<String, String>();
+        JSONObject jsonObject = new JSONObject(map[0]);
+        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest
+                (Request.Method.POST,GlobleData.captchaUrl,
+                jsonObject,
+                        new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("TAG", "response -> " + response.toString());
+                         s[0] =response.toString();
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+            }
+        });
+
+        requestQueue.add(jsonRequest);
+
+        return s[0];
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        // TODO Auto-generated method stub
+
+        super.onPostExecute(result);
+    }
 
 
-
-
-
+}
