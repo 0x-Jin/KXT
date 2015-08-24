@@ -14,4 +14,5 @@
     <string name="title_activity_message">MessageActivity</string>
     <string name="title_activity_info">InfoActivity</string>
     <string name="title_activity_comment">CommentActivity</string>
+    <string name="title_activity_change_password">ChangePasswordActivity</string>
 </resources>

@@ -116,7 +116,7 @@
         </activity>
         <activity
             android:name=".Activities.MessageActivity"
-            android:label="@string/title_activity_message">
+            android:label="@string/title_activity_message" >
         </activity>
         <activity
             android:name=".Activities.InfoActivity"
@@ -129,7 +129,11 @@
 
         <activity
             android:name=".Activities.CommentActivity"
-            android:label="@string/title_activity_comment"></activity>
+            android:label="@string/title_activity_comment" />
+        <activity
+            android:name=".Activities.ChangePasswordActivity"
+            android:label="@string/title_activity_change_password" >
+        </activity>
     </application>
 
 </manifest>

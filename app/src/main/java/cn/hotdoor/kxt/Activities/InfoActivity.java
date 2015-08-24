@@ -35,7 +35,7 @@ public class InfoActivity extends AppCompatActivity {
         accountRl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(InfoActivity.this,ChangePasswordActivity.class));
+                startActivity(new Intent(InfoActivity.this,ChangePasswordActivity.class));
             }
         });
     }
@@ -44,7 +44,7 @@ public class InfoActivity extends AppCompatActivity {
         commentRl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(InfoActivity.this,commentActivity.class));
+                startActivity(new Intent(InfoActivity.this,CommentActivity.class));
             }
         });
     }
