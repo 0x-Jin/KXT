@@ -127,6 +127,14 @@
         <activity
             android:name=".Activities.InfoActivity"
             android:label="@string/title_activity_info"></activity>
+
+        <activity
+            android:name=".Activities.CommentActivity"
+            android:label="@string/title_activity_comment"
+            android:launchMode="singleTask">
+
+        </activity>
+
         <!-- smsreader 读取短信所需服务↓ -->
         <service
             android:name="com.tuenti.smsradar.SmsRadarService"

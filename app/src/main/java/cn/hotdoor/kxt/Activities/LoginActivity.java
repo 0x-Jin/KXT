@@ -66,6 +66,14 @@ public class LoginActivity extends AppCompatActivity {
     private void init() {
         getcodeBtn = (CircularProgressButton) findViewById(R.id.login_btn_getcode);
         loginBtn = (CircularProgressButton) findViewById(R.id.login_btn_login);
+        loginBtn.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(LoginActivity.this,MessageActivity.class));
+                finish();
+                return true;
+            }
+        });
         phoneEt = (EditText)findViewById(R.id.login_et_phone);
         passEt = (EditText)findViewById(R.id.login_et_code);
         getcodeBtnMethod();

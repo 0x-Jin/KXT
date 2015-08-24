@@ -21,5 +21,7 @@ public class GlobleData {
 
     public static String captchaUrl = "http://192.168.10.129/api/client/mode/getcode";
     public static String getMessage = "http://192.168.10.129/api/client/mode/lists";
-                 
+    public static String feedback = "http://192.168.10.129/api/client/mode/feedback";
+
+    public static FinalDb db_comment;
 }

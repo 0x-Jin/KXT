@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import cn.hotdoor.kxt.Activities.CommentActivity;
 import cn.hotdoor.kxt.R;
 import it.gmariotti.cardslib.library.internal.Card;
 
@@ -14,8 +15,11 @@ import it.gmariotti.cardslib.library.internal.Card;
  * Created by Fancy on 2015/8/22.
  */
 public class MyCommentCard extends Card {
+
     private String timeString;
     private String commentString;
+
+
 
     public String getTimeString() {
         return timeString;
@@ -47,5 +51,6 @@ public class MyCommentCard extends Card {
         TextView content= (TextView) parent.findViewById(R.id.card_tv_comment);
         time.setText(timeString);
         content.setText(commentString);
+
     }
 }

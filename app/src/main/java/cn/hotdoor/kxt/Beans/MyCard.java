@@ -17,6 +17,7 @@ import it.gmariotti.cardslib.library.internal.Card;
  * Created by Fancy on 2015/8/11.
  */
 public class MyCard extends Card {
+
         public String Date,Message,Phone;
         public String Icon;
 
